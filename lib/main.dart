@@ -1,14 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fresh_project/screens/home/home.dart'; // Adjust path based on your file structure
+import 'package:fresh_project/screens/product_details/details.dart';
+import 'package:provider/provider.dart';
+import 'services/cart_provider.dart';
+import 'package:fresh_project/screens/cart/cart.dart';
+import 'package:fresh_project/screens/auth/auth.dart';
+import 'package:fresh_project/screens/aboutUs/aboutUs.dart';
+
 
 
 import 'package:firebase_core/firebase_core.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => CartProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 
@@ -20,7 +32,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Firestore Demo',
-      home: HomeScreen(),
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -40,6 +51,14 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => HomeScreen(),
+        '/productDetails': (context) => ProductDetailsScreen(),
+        '/cart': (context) => CartScreen(),
+        '/auth': (context) => AuthScreen(),
+        '/aboutUs': (context) => AboutScreen(),
+      }
     );
   }
 }
